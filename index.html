@@ -1,218 +1,890 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FastWeb Cafe Demo</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Friends Coffee Bar · Panjrapol, Ahmedabad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 
-/* RESET */
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Poppins',sans-serif;background:#faf4eb;color:#111}
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#faf4eb;color:#1a0f05;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{text-decoration:none}
 
-/* NAV */
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#e8850a;border-radius:99px}
+
+/* ══════════════════════════════════
+   NAV
+══════════════════════════════════ */
 nav{
-position:fixed;top:0;width:100%;
-display:flex;justify-content:space-between;align-items:center;
-padding:15px 20px;
-background:#fff;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
-z-index:1000;
+  position:fixed;top:0;width:100%;z-index:999;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 20px;
+  background:rgba(250,244,235,.95);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(232,133,10,.12);
 }
-.logo{font-weight:700;font-size:18px}
-
-.ham{font-size:22px;cursor:pointer}
-
-/* MOBILE MENU */
-.nav-links{
-position:fixed;
-top:0;right:-100%;
-width:70%;height:100vh;
-background:#fff;
-display:flex;
-flex-direction:column;
-padding:80px 20px;
-gap:20px;
-transition:0.3s;
+.logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:16px;
+  color:#1a0f05;display:flex;align-items:center;gap:6px;
 }
-.nav-links.active{right:0}
-.nav-links a{text-decoration:none;color:#111;font-weight:500}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:#e8850a;flex-shrink:0}
+.ham{
+  width:38px;height:38px;border-radius:50%;
+  background:#1a0f05;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;cursor:pointer;
+  border:none;flex-shrink:0;
+}
+.ham span{display:block;width:16px;height:1.5px;background:#faf4eb;border-radius:99px;transition:.3s}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 
-/* HERO */
+/* DRAWER */
+.drawer{
+  position:fixed;top:0;right:0;width:75%;max-width:300px;height:100svh;
+  background:#1a0f05;z-index:998;
+  display:flex;flex-direction:column;
+  padding:80px 28px 28px;gap:6px;
+  transform:translateX(110%);transition:transform .32s ease;
+}
+.drawer.open{transform:translateX(0)}
+.drawer a{
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(250,244,235,.55);padding:14px 0;
+  border-bottom:1px solid rgba(250,244,235,.06);
+  transition:color .2s;
+}
+.drawer a:hover{color:#e8850a}
+.drawer .d-order{
+  margin-top:auto;background:#e8850a;color:#fff;
+  padding:14px;border-radius:10px;text-align:center;
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:997;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.overlay.on{opacity:1;pointer-events:all}
+
+/* ══════════════════════════════════
+   HERO
+══════════════════════════════════ */
 #hero{
-min-height:100vh;
-padding:100px 20px 40px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-text-align:center;
-background:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=70') center/cover;
-color:#fff;
-position:relative;
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  position:relative;overflow:hidden;
+  padding:0 20px 44px;
 }
-#hero::after{
-content:'';
-position:absolute;inset:0;
-background:rgba(0,0,0,0.6);
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=80') center/cover no-repeat;
+  transform:scale(1.02);
 }
-.hero-content{
-position:relative;z-index:2;
+.hero-grad{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(15,8,2,.92) 0%,rgba(15,8,2,.5) 50%,rgba(15,8,2,.25) 100%);
 }
+.hero-inner{position:relative;z-index:2}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(232,133,10,.18);border:1px solid rgba(232,133,10,.4);
+  color:#f5a623;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  padding:5px 12px;border-radius:99px;margin-bottom:16px;
+}
+.pulse{width:5px;height:5px;border-radius:50%;background:#f5a623;animation:p 2s infinite}
+@keyframes p{0%,100%{opacity:.35}50%{opacity:1}}
 .hero-title{
-font-size:28px;
-font-weight:700;
-line-height:1.3;
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(30px,8vw,52px);
+  color:#fdfaf6;line-height:1.1;margin-bottom:8px;
 }
+.hero-title span{color:#e8850a}
 .hero-sub{
-margin-top:10px;
-font-size:14px;
-opacity:0.8;
+  font-size:14px;color:rgba(253,250,246,.6);
+  font-weight:300;margin-bottom:20px;line-height:1.6;
 }
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+.htag{
+  font-size:11px;color:rgba(253,250,246,.5);
+  border:1px solid rgba(253,250,246,.15);
+  padding:4px 11px;border-radius:99px;
+}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap}
 .btn{
-margin-top:20px;
-display:inline-block;
-background:#e8850a;
-padding:12px 25px;
-border-radius:30px;
-color:#fff;
-text-decoration:none;
-font-weight:600;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:13px 22px;border-radius:99px;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-amber{background:#e8850a;color:#fff}
+.btn-ghost{background:transparent;color:#fdfaf6;border:1.5px solid rgba(253,250,246,.28)}
+
+/* ══════════════════════════════════
+   TICKER
+══════════════════════════════════ */
+.ticker{background:#1a0f05;padding:11px 0;overflow:hidden}
+.ticker-track{
+  display:flex;gap:28px;white-space:nowrap;
+  animation:tick 22s linear infinite;
+}
+.ticker-track span{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,244,235,.35)}
+.ticker-track .dot{color:#e8850a;font-size:14px}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ══════════════════════════════════
+   SHARED SECTION
+══════════════════════════════════ */
+.section{padding:56px 20px}
+.s-label{
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:#e8850a;margin-bottom:8px;
+}
+.s-title{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(22px,6vw,32px);line-height:1.15;color:#1a0f05;
+}
+.s-title em{color:#e8850a;font-style:normal}
+.s-rule{width:36px;height:2px;background:#e8850a;border-radius:99px;margin:14px 0 20px}
+
+/* ══════════════════════════════════
+   ABOUT
+══════════════════════════════════ */
+#about{background:#faf4eb}
+.about-img{
+  width:100%;height:240px;object-fit:cover;
+  border-radius:12px;margin-bottom:28px;
+  box-shadow:0 10px 32px rgba(15,8,2,.12);
+}
+.about-body p{font-size:14.5px;line-height:1.82;color:#7a5c3a;margin-bottom:12px}
+.about-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#f0e6d3;border:1px solid rgba(26,15,5,.07);
+  font-size:12px;color:#1a0f05;font-weight:500;
+  padding:6px 13px;border-radius:99px;
 }
 
-/* SECTION */
-section{padding:50px 20px}
-h2{margin-bottom:20px}
+/* HOURS CARD */
+.hours-card{
+  margin-top:24px;background:#1a0f05;border-radius:12px;
+  padding:20px;
+}
+.hours-card h4{
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;color:#e8850a;margin-bottom:14px;
+}
+.h-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;padding:9px 0;border-bottom:1px solid rgba(250,244,235,.06);
+}
+.h-row:last-child{border:none}
+.h-day{color:rgba(250,244,235,.45)}
+.h-time{color:#faf4eb;font-weight:500}
+.h-time.amber{color:#e8850a}
 
-/* MENU */
-.menu-grid{
-display:grid;
-grid-template-columns:1fr;
-gap:15px;
+/* STAT STRIP */
+.stat-strip{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px;
 }
-.card{
-background:#fff;
-border-radius:12px;
-overflow:hidden;
-box-shadow:0 5px 15px rgba(0,0,0,0.05);
+.stat-box{
+  background:#fff;border:1px solid rgba(26,15,5,.06);
+  border-radius:10px;padding:16px;text-align:center;
 }
-.card img{
-width:100%;
-height:160px;
-object-fit:cover;
+.stat-num{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#e8850a;
 }
-.card-body{
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-.price{color:#e8850a;font-weight:600}
+.stat-lbl{font-size:11px;color:#7a5c3a;margin-top:3px}
 
-/* CONTACT */
-.contact{text-align:center}
+/* ══════════════════════════════════
+   MENU
+══════════════════════════════════ */
+#menu-section{background:#1a0f05}
+#menu-section .s-title{color:#fdfaf6}
+#menu-section .s-rule{background:#e8850a}
 
-/* FLOATING WHATSAPP */
-.floating-wa{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#25D366;
-width:55px;height:55px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#fff;
-font-size:22px;
-box-shadow:0 10px 20px rgba(0,0,0,0.2);
-z-index:1000;
+.menu-tabs{
+  display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:24px;
+  scrollbar-width:none;
+}
+.menu-tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex-shrink:0;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 16px;border-radius:99px;border:none;cursor:pointer;
+  background:rgba(250,244,235,.07);color:rgba(250,244,235,.45);
+  -webkit-tap-highlight-color:transparent;transition:all .2s;
+}
+.tab.on{background:#e8850a;color:#fff;box-shadow:0 4px 14px rgba(232,133,10,.35)}
+
+.panel{display:none}.panel.on{display:block}
+
+.menu-grid{display:flex;flex-direction:column;gap:12px}
+.mcard{
+  background:rgba(250,244,235,.04);
+  border:1px solid rgba(250,244,235,.07);
+  border-radius:12px;overflow:hidden;
+  display:flex;align-items:stretch;
+}
+.mcard-img{
+  width:100px;flex-shrink:0;
+}
+.mcard-img img{width:100%;height:100%;object-fit:cover}
+.mcard-body{
+  padding:12px 14px;display:flex;flex-direction:column;justify-content:center;flex:1;
+}
+.mcard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px}
+.mcard-name{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fdfaf6;line-height:1.3;
+}
+.mcard-price{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:800;
+  color:#e8850a;white-space:nowrap;flex-shrink:0;
+}
+.mcard-desc{font-size:11.5px;color:rgba(250,244,235,.42);line-height:1.55}
+.mcard-tag{
+  display:inline-block;margin-top:6px;
+  font-family:'Syne',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(232,133,10,.18);color:#f5a623;
+  padding:3px 8px;border-radius:99px;width:fit-content;
 }
 
-/* DESKTOP UPGRADE */
+/* ORDER BANNER */
+.order-banner{
+  margin-top:24px;
+  background:linear-gradient(120deg,#e8850a,#f5a623);
+  border-radius:14px;padding:20px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.order-banner h3{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;
+}
+.order-banner p{font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.55}
+.order-banner .btn-zomato{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#fff;color:#e8850a;
+  padding:12px 22px;border-radius:99px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;width:fit-content;
+}
+
+/* ══════════════════════════════════
+   GALLERY
+══════════════════════════════════ */
+#gallery{background:#faf4eb}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:140px 140px 180px;
+  gap:8px;margin-top:4px;
+}
+.gitem{border-radius:10px;overflow:hidden}
+.gitem img{width:100%;height:100%;object-fit:cover}
+.gitem:nth-child(1){grid-column:1/3}
+.gitem:nth-child(4){grid-column:1/3}
+
+/* ══════════════════════════════════
+   REVIEWS
+══════════════════════════════════ */
+#reviews{background:#1a0f05}
+#reviews .s-title{color:#fdfaf6}
+#reviews .s-rule{background:#e8850a}
+
+.reviews-scroll{
+  display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-top:4px;
+  scrollbar-width:none;
+}
+.reviews-scroll::-webkit-scrollbar{display:none}
+.rcard{
+  flex-shrink:0;width:280px;
+  background:rgba(250,244,235,.05);border:1px solid rgba(250,244,235,.08);
+  border-radius:12px;padding:18px;
+}
+.r-stars{color:#e8850a;font-size:12px;letter-spacing:.06em;margin-bottom:10px}
+.r-text{font-size:13px;color:rgba(250,244,235,.5);line-height:1.72;margin-bottom:14px}
+.r-author{display:flex;align-items:center;gap:10px}
+.r-av{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1.5px solid #e8850a}
+.r-name{font-size:12px;font-weight:600;color:#fdfaf6}
+.r-via{font-size:10.5px;color:rgba(250,244,235,.3);margin-top:1px}
+
+.rating-bar{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px;
+}
+.r-stat{
+  background:rgba(250,244,235,.04);border:1px solid rgba(250,244,235,.07);
+  border-radius:10px;padding:14px;text-align:center;
+}
+.r-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#e8850a}
+.r-lbl{font-size:10px;color:rgba(250,244,235,.35);margin-top:2px;letter-spacing:.08em;text-transform:uppercase}
+
+/* ══════════════════════════════════
+   CONTACT
+══════════════════════════════════ */
+#contact{background:#faf4eb}
+.ccard{
+  background:#fff;border-radius:12px;padding:18px;
+  display:flex;gap:14px;align-items:flex-start;margin-bottom:12px;
+  box-shadow:0 2px 12px rgba(15,8,2,.06);
+}
+.cicon{
+  width:42px;height:42px;flex-shrink:0;border-radius:50%;
+  background:#1a0f05;display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.c-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#e8850a;font-weight:600;margin-bottom:4px}
+.c-val{font-size:13.5px;color:#1a0f05;line-height:1.55}
+
+.map-wrap{border-radius:12px;overflow:hidden;margin-top:20px;height:220px;box-shadow:0 4px 20px rgba(15,8,2,.1)}
+.map-wrap iframe{width:100%;height:100%;border:none}
+
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn-wa{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  background:#25D366;color:#fff;
+  padding:14px;border-radius:12px;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;min-width:0;
+  box-shadow:0 4px 16px rgba(37,211,102,.25);
+}
+.btn-call{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  background:#1a0f05;color:#fdfaf6;
+  padding:14px;border-radius:12px;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;min-width:0;
+}
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+footer{
+  background:#1a0f05;color:#fdfaf6;
+  padding:36px 20px 24px;
+}
+.footer-logo{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;
+  color:#fdfaf6;display:flex;align-items:center;gap:6px;margin-bottom:10px;
+}
+footer p{font-size:12.5px;color:rgba(250,244,235,.38);line-height:1.7;margin-bottom:20px;max-width:280px}
+.footer-socials{display:flex;gap:8px;margin-bottom:24px}
+.soc{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid rgba(250,244,235,.12);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(250,244,235,.4);font-size:12px;
+}
+.footer-links{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:24px}
+.footer-links a{font-size:13px;color:rgba(250,244,235,.4);padding:3px 0}
+.footer-bottom{
+  border-top:1px solid rgba(250,244,235,.06);padding-top:16px;
+  font-size:11px;color:rgba(250,244,235,.2);
+}
+
+/* ══════════════════════════════════
+   FLOATING WHATSAPP
+══════════════════════════════════ */
+.float-wa{
+  position:fixed;bottom:22px;right:20px;z-index:900;
+  width:52px;height:52px;border-radius:50%;
+  background:#25D366;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 22px rgba(37,211,102,.4);
+  -webkit-tap-highlight-color:transparent;
+}
+.float-wa svg{fill:#fff}
+
+/* ══════════════════════════════════
+   DESKTOP UPGRADE
+══════════════════════════════════ */
 @media(min-width:768px){
-.hero-title{font-size:48px}
-.menu-grid{
-grid-template-columns:repeat(3,1fr);
+  nav{padding:14px 5%}
+  .section{padding:80px 5%}
+  .hero-title{font-size:60px}
+  .menu-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  }
+  .mcard-img{width:120px}
+  .gallery-grid{
+    grid-template-columns:1fr 1fr 1fr;
+    grid-template-rows:200px 200px;
+  }
+  .gitem:nth-child(1){grid-column:1/2}
+  .gitem:nth-child(4){grid-column:1/2}
+  .gitem:nth-child(3){grid-column:3/4;grid-row:1/3}
+  .reviews-scroll{flex-wrap:wrap;overflow:visible}
+  .rcard{width:calc(33.33% - 8px);flex-shrink:1}
 }
-nav{padding:15px 5%}
-section{padding:80px 5%}
+@media(min-width:1024px){
+  .menu-grid{grid-template-columns:1fr 1fr 1fr}
+  .stat-strip{grid-template-columns:1fr 1fr 1fr 1fr}
 }
-
 </style>
 </head>
-
 <body>
 
-<!-- NAV -->
+<!-- ══ NAV ══ -->
 <nav>
-<div class="logo">FastWeb Cafe</div>
-<div class="ham" onclick="toggleMenu()">☰</div>
+  <a href="#hero" class="logo"><div class="logo-dot"></div>Friends Coffee Bar</a>
+  <button class="ham" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<div class="nav-links" id="menu">
-<a href="#menu-section">Menu</a>
-<a href="#contact">Contact</a>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="drawer" id="drawer">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#menu-section" onclick="closeMenu()">Menu</a>
+  <a href="#gallery" onclick="closeMenu()">Gallery</a>
+  <a href="#reviews" onclick="closeMenu()">Reviews</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="https://www.zomato.com/ahmedabad/friends-coffee-bar-panjrapol-sanstha/order" target="_blank" class="d-order">Order on Zomato</a>
 </div>
 
-<!-- HERO -->
+<!-- ══ HERO ══ -->
 <section id="hero">
-<div class="hero-content">
-<h1 class="hero-title">Fresh Coffee, Cozy Vibes</h1>
-<p class="hero-sub">Perfect place for late night coffee & snacks</p>
-<a href="#menu-section" class="btn">View Menu</a>
-</div>
+  <div class="hero-bg"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-inner">
+    <div class="hero-chip"><div class="pulse"></div>Open Now · 11 AM – 3 AM</div>
+    <h1 class="hero-title">Friends<br><span>Coffee Bar</span></h1>
+    <p class="hero-sub">Cold Coffee · Maggi · Pasta · Frankies<br>Panjrapol Sanstha, Ahmedabad</p>
+    <div class="hero-tags">
+      <span class="htag">⭐ 4.2 Rating</span>
+      <span class="htag">🌙 Open Till 3 AM</span>
+      <span class="htag">🛵 Zomato Delivery</span>
+      <span class="htag">🌿 100% Veg</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#menu-section" class="btn btn-amber">View Menu</a>
+      <a href="https://www.zomato.com/ahmedabad/friends-coffee-bar-panjrapol-sanstha/order" target="_blank" class="btn btn-ghost">Order Now</a>
+    </div>
+  </div>
 </section>
 
-<!-- MENU -->
-<section id="menu-section">
-<h2>Our Menu</h2>
-
-<div class="menu-grid">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&q=70">
-<div class="card-body">
-<h3>Cold Coffee</h3>
-<span class="price">₹80</span>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500&q=70">
-<div class="card-body">
-<h3>Maggi</h3>
-<span class="price">₹60</span>
-</div>
-</div>
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&q=70">
-<div class="card-body">
-<h3>Pasta</h3>
-<span class="price">₹100</span>
-</div>
+<!-- ══ TICKER ══ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Cold Coffee</span><span class="dot">·</span>
+    <span>19 Maggi Varieties</span><span class="dot">·</span>
+    <span>Pasta</span><span class="dot">·</span>
+    <span>Frankies</span><span class="dot">·</span>
+    <span>Open Till 3 AM</span><span class="dot">·</span>
+    <span>Hand-Mixed Coffee</span><span class="dot">·</span>
+    <span>100% Veg</span><span class="dot">·</span>
+    <span>Goyal Towers, Panjrapol</span><span class="dot">·</span>
+    <!-- duplicate for seamless loop -->
+    <span>Cold Coffee</span><span class="dot">·</span>
+    <span>19 Maggi Varieties</span><span class="dot">·</span>
+    <span>Pasta</span><span class="dot">·</span>
+    <span>Frankies</span><span class="dot">·</span>
+    <span>Open Till 3 AM</span><span class="dot">·</span>
+    <span>Hand-Mixed Coffee</span><span class="dot">·</span>
+    <span>100% Veg</span><span class="dot">·</span>
+    <span>Goyal Towers, Panjrapol</span><span class="dot">·</span>
+  </div>
 </div>
 
-</div>
+<!-- ══ ABOUT ══ -->
+<section id="about" class="section">
+  <img class="about-img" src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&q=80" alt="Friends Coffee Bar"/>
+  <div class="about-body">
+    <p class="s-label">Who We Are</p>
+    <h2 class="s-title">Ahmedabad's Favourite <em>Late-Night Spot</em></h2>
+    <div class="s-rule"></div>
+    <p>Friends Coffee Bar is the go-to haunt for Ahmedabad's college crowd, night owls, and cold-coffee loyalists. Nestled in Goyal Towers, opposite Police Chowky in Panjrapol Sanstha — we're your 2 AM plan.</p>
+    <p>Our signature hand-run mixture gives our cold coffee a texture and froth that machines just can't replicate. Whether you want a Classic Cold Coffee or a wild Triple Threat Maggi at 2 AM — we've got you.</p>
+    <div class="about-pills">
+      <span class="pill">☕ Hand-Mixed Coffee</span>
+      <span class="pill">🌙 Open Till 3 AM</span>
+      <span class="pill">🛵 Fast Delivery</span>
+      <span class="pill">🌿 100% Veg</span>
+      <span class="pill">⭐ 4.2 on Zomato</span>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-box"><div class="stat-num">4.2★</div><div class="stat-lbl">Zomato Rating</div></div>
+      <div class="stat-box"><div class="stat-num">44+</div><div class="stat-lbl">Drink Variants</div></div>
+      <div class="stat-box"><div class="stat-num">19</div><div class="stat-lbl">Maggi Types</div></div>
+      <div class="stat-box"><div class="stat-num">3 AM</div><div class="stat-lbl">Still Open</div></div>
+    </div>
+    <div class="hours-card">
+      <h4>Today's Hours</h4>
+      <div class="h-row"><span class="h-day">Morning</span><span class="h-time">11:00 AM – 11:45 PM</span></div>
+      <div class="h-row"><span class="h-day">Late Night</span><span class="h-time amber">12:00 AM – 3:00 AM ✦</span></div>
+      <div class="h-row"><span class="h-day">Phone</span><span class="h-time">+91 91736 41342</span></div>
+    </div>
+  </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="contact">
-<h2>Contact Us</h2>
-<p>📍 Ahmedabad</p>
-<p>📞 +91 91736 41342</p>
+<!-- ══ MENU ══ -->
+<section id="menu-section" class="section">
+  <p class="s-label">What We Serve</p>
+  <h2 class="s-title" style="color:#fdfaf6">The Full <em>Menu</em></h2>
+  <div class="s-rule"></div>
+
+  <div class="menu-tabs">
+    <button class="tab on" data-p="coffee">☕ Coffee</button>
+    <button class="tab" data-p="maggi">🍜 Maggi</button>
+    <button class="tab" data-p="pasta">🍝 Pasta</button>
+    <button class="tab" data-p="frankies">🌯 Frankies</button>
+  </div>
+
+  <!-- COFFEE -->
+  <div class="panel on" id="p-coffee">
+    <div class="menu-grid">
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&q=75" alt="Classic Cold Coffee"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Classic Cold Coffee</span><span class="mcard-price">₹80</span></div>
+          <p class="mcard-desc">Hand-run to a perfect froth. The one that started it all.</p>
+          <span class="mcard-tag">Classic</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=75" alt="Bournvita Cold Coffee"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Bournvita Cold Coffee</span><span class="mcard-price">₹90</span></div>
+          <p class="mcard-desc">Blended with rich Bournvita for a malty, chocolatey depth.</p>
+          <span class="mcard-tag">Bestseller</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=400&q=75" alt="Mocha Cold Coffee"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Mocha Cold Coffee</span><span class="mcard-price">₹95</span></div>
+          <p class="mcard-desc">Coffee and chocolate fused in one cold, creamy cup.</p>
+          <span class="mcard-tag">Fan Fave</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&q=75" alt="Hazelnut Cold Coffee"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Hazelnut Cold Coffee</span><span class="mcard-price">₹100</span></div>
+          <p class="mcard-desc">Cold coffee with a nutty hazelnut twist. Aromatic and layered.</p>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75" alt="Vanilla Cold Coffee"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Vanilla Cold Coffee</span><span class="mcard-price">₹95</span></div>
+          <p class="mcard-desc">Smooth coffee with a hint of vanilla. Clean and fragrant.</p>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=400&q=75" alt="Oreo Cold Coffee"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Oreo Cold Coffee</span><span class="mcard-price">₹110</span></div>
+          <p class="mcard-desc">Coffee with crushed Oreo. Thick, crunchy, indulgent.</p>
+          <span class="mcard-tag">🔥 Popular</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAGGI -->
+  <div class="panel" id="p-maggi">
+    <div class="menu-grid">
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=75" alt="Classic Maggi"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Classic Maggi</span><span class="mcard-price">₹60</span></div>
+          <p class="mcard-desc">Cooked with Indian spices. Your 2 AM comfort food.</p>
+          <span class="mcard-tag">Classic</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400&q=75" alt="Butter Maggi"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Butter Maggi</span><span class="mcard-price">₹75</span></div>
+          <p class="mcard-desc">Tossed with rich butter. Golden, silky, and moreish.</p>
+          <span class="mcard-tag">Rich</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&q=75" alt="Cheese Maggi"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Cheese Maggi</span><span class="mcard-price">₹90</span></div>
+          <p class="mcard-desc">Loaded with melted cheese. Stretchy and deeply satisfying.</p>
+          <span class="mcard-tag">Bestseller</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&q=75" alt="Schezwan Maggi"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Schezwan Maggi</span><span class="mcard-price">₹85</span></div>
+          <p class="mcard-desc">Fiery schezwan and masala mix. A kick in every bite.</p>
+          <span class="mcard-tag">🌶 Spicy</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=75" alt="Peri Peri Maggi"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Peri Peri Maggi</span><span class="mcard-price">₹85</span></div>
+          <p class="mcard-desc">Smoky, tangy peri peri spiced Maggi. Bold and street-style.</p>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=75" alt="Triple Threat Maggi"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Triple Threat Maggi</span><span class="mcard-price">₹110</span></div>
+          <p class="mcard-desc">Cheese + Peri Peri + Schezwan. When you can't choose — have all three.</p>
+          <span class="mcard-tag">🔥 Wild</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PASTA -->
+  <div class="panel" id="p-pasta">
+    <div class="menu-grid">
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=75" alt="Schezwan Pasta"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Schezwan Pasta</span><span class="mcard-price">₹100</span></div>
+          <p class="mcard-desc">Spicy schezwan tossed in a rich cheese sauce.</p>
+          <span class="mcard-tag">Popular</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=75" alt="Cheese Pasta"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Cheese Pasta</span><span class="mcard-price">₹100</span></div>
+          <p class="mcard-desc">Thick, velvety cheese sauce coating every strand.</p>
+          <span class="mcard-tag">Creamy</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1627574547569-b8ee505e42e9?w=400&q=75" alt="Peri Peri Pasta"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Peri Peri Pasta</span><span class="mcard-price">₹100</span></div>
+          <p class="mcard-desc">Fiery peri peri with smoky spices and a tangy kick.</p>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=75" alt="Butter Masala Pasta"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Butter Masala Pasta</span><span class="mcard-price">₹95</span></div>
+          <p class="mcard-desc">Buttery masala sauce. Mildly spiced, the crowd-pleaser.</p>
+          <span class="mcard-tag">Mild</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRANKIES -->
+  <div class="panel" id="p-frankies">
+    <div class="menu-grid">
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&q=75" alt="Paneer Tikka Frankie"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Paneer Tikka Frankie</span><span class="mcard-price">₹90</span></div>
+          <p class="mcard-desc">Juicy paneer tikka in a soft roti with chutneys. A full meal.</p>
+          <span class="mcard-tag">🔥 Top Pick</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=75" alt="Schezwan Frankie"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Schezwan Frankie</span><span class="mcard-price">₹80</span></div>
+          <p class="mcard-desc">Schezwan sauce, crunchy veggies, wrapped tight. Saucy and bold.</p>
+          <span class="mcard-tag">Spicy</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=400&q=75" alt="Cheese Corn Frankie"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Chilli Cheese Corn Frankie</span><span class="mcard-price">₹85</span></div>
+          <p class="mcard-desc">Sweet corn, chilli, melted cheese. Gooey and crunchy.</p>
+          <span class="mcard-tag">Mild</span>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-img"><img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&q=75" alt="Peri Peri Frankie"/></div>
+        <div class="mcard-body">
+          <div class="mcard-top"><span class="mcard-name">Peri Peri Veg Frankie</span><span class="mcard-price">₹80</span></div>
+          <p class="mcard-desc">Smoky peri peri in a warm roti. Pairs great with cold coffee.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="order-banner">
+    <div>
+      <h3>Open till 3 in the morning ☕</h3>
+      <p>Hunger doesn't follow a schedule. Neither do we. Order now on Zomato and get it delivered in ~32 min.</p>
+    </div>
+    <a href="https://www.zomato.com/ahmedabad/friends-coffee-bar-panjrapol-sanstha/order" target="_blank" class="btn-zomato">Order on Zomato →</a>
+  </div>
 </section>
 
-<!-- WHATSAPP -->
-<a href="https://wa.me/919173641342" class="floating-wa">💬</a>
+<!-- ══ GALLERY ══ -->
+<section id="gallery" class="section">
+  <p class="s-label">Vibes Only</p>
+  <h2 class="s-title">Life at Friends <em>Coffee Bar</em></h2>
+  <div class="s-rule"></div>
+  <div class="gallery-grid">
+    <div class="gitem"><img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=800&q=75" alt="Cafe"/></div>
+    <div class="gitem"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=75" alt="Coffee pour"/></div>
+    <div class="gitem"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=75" alt="Cold coffee"/></div>
+    <div class="gitem"><img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&q=75" alt="Maggi"/></div>
+    <div class="gitem"><img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=75" alt="Late night cafe"/></div>
+  </div>
+</section>
+
+<!-- ══ REVIEWS ══ -->
+<section id="reviews" class="section">
+  <p class="s-label">What People Say</p>
+  <h2 class="s-title" style="color:#fdfaf6">Loved by <em>Ahmedabad</em></h2>
+  <div class="s-rule"></div>
+  <div class="reviews-scroll">
+    <div class="rcard">
+      <div class="r-stars">★★★★★</div>
+      <p class="r-text">Cold coffee is really good here — open past midnight is a lifesaver. The Oreo cold coffee is dangerously delicious. Staff is always friendly.</p>
+      <div class="r-author">
+        <img class="r-av" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=75" alt="Riya"/>
+        <div><div class="r-name">Riya Patel</div><div class="r-via">Zomato · Navrangpura</div></div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="r-stars">★★★★☆</div>
+      <p class="r-text">Best late-night spot near HL College. Butter Maggi at 2 AM hits different. Prices are very reasonable and portions are generous.</p>
+      <div class="r-author">
+        <img class="r-av" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=75" alt="Harsh"/>
+        <div><div class="r-name">Harsh Mehta</div><div class="r-via">Google · Panjrapol</div></div>
+      </div>
+    </div>
+    <div class="rcard">
+      <div class="r-stars">★★★★★</div>
+      <p class="r-text">Triple Threat Maggi with hazelnut cold coffee is absolutely unreal. This place is our gang's go-to after every evening stroll. Always consistent.</p>
+      <div class="r-author">
+        <img class="r-av" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=75" alt="Snehal"/>
+        <div><div class="r-name">Snehal Joshi</div><div class="r-via">Zomato · Ambavadi</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="rating-bar">
+    <div class="r-stat"><div class="r-num">4.2★</div><div class="r-lbl">Google Rating</div></div>
+    <div class="r-stat"><div class="r-num">44+</div><div class="r-lbl">Drinks</div></div>
+    <div class="r-stat"><div class="r-num">1k+</div><div class="r-lbl">Customers</div></div>
+    <div class="r-stat"><div class="r-num">3 AM</div><div class="r-lbl">Still Open</div></div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact" class="section">
+  <p class="s-label">Visit Us</p>
+  <h2 class="s-title">Come Find <em>Us</em></h2>
+  <div class="s-rule"></div>
+
+  <div class="ccard">
+    <div class="cicon">📍</div>
+    <div>
+      <div class="c-label">Address</div>
+      <div class="c-val">17, Goyal Towers, Opp. Police Chowky<br>Panjrapol Sanstha, Ahmedabad – 380006</div>
+    </div>
+  </div>
+  <div class="ccard">
+    <div class="cicon">📞</div>
+    <div>
+      <div class="c-label">Phone</div>
+      <div class="c-val">+91 91736 41342</div>
+    </div>
+  </div>
+  <div class="ccard">
+    <div class="cicon">🕐</div>
+    <div>
+      <div class="c-label">Hours</div>
+      <div class="c-val">11:00 AM – 11:45 PM (Daily)<br>12:00 AM – 3:00 AM (Late Night)</div>
+    </div>
+  </div>
+  <div class="ccard">
+    <div class="cicon">🛵</div>
+    <div>
+      <div class="c-label">Delivery</div>
+      <div class="c-val">Available on Zomato · ~32 min</div>
+    </div>
+  </div>
+
+  <div class="map-wrap">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.5!2d72.558!3d23.015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84f9c9060685%3A0x6c3d5b0b1e93de34!2sPanjrapol%20Sanstha%2C%20Ahmedabad%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1710000000001!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+
+  <div class="cta-row">
+    <a href="https://wa.me/919173641342" class="btn-wa" target="_blank">
+      <svg width="17" height="17" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="tel:+919173641342" class="btn-call">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+      Call Now
+    </a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-logo"><div class="logo-dot"></div>Friends Coffee Bar</div>
+  <p>Ahmedabad's favourite late-night coffee stop. Cold coffee, hot Maggi, and good vibes — any time of day or night at Panjrapol Sanstha.</p>
+  <div class="footer-socials">
+    <a href="#" class="soc" aria-label="Instagram">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="#" class="soc" aria-label="Facebook">
+      <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="https://www.zomato.com/ahmedabad/friends-coffee-bar-panjrapol-sanstha" target="_blank" class="soc" aria-label="Zomato">Z</a>
+  </div>
+  <div class="footer-links">
+    <a href="#about" style="color:rgba(250,244,235,.4)">About Us</a>
+    <a href="#menu-section" style="color:rgba(250,244,235,.4)">Menu</a>
+    <a href="#gallery" style="color:rgba(250,244,235,.4)">Gallery</a>
+    <a href="#reviews" style="color:rgba(250,244,235,.4)">Reviews</a>
+    <a href="#contact" style="color:rgba(250,244,235,.4)">Contact</a>
+    <a href="https://www.zomato.com/ahmedabad/friends-coffee-bar-panjrapol-sanstha/order" target="_blank" style="color:#e8850a">Order Online</a>
+  </div>
+  <div class="footer-bottom">© 2024 Friends Coffee Bar, Panjrapol Sanstha, Ahmedabad.</div>
+</footer>
+
+<!-- ══ FLOATING WHATSAPP ══ -->
+<a href="https://wa.me/919173641342" class="float-wa" target="_blank" aria-label="WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
 
 <script>
-function toggleMenu(){
-document.getElementById("menu").classList.toggle("active");
-}
+/* NAV DRAWER */
+const ham=document.getElementById('ham'),drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay');
+ham.addEventListener('click',()=>{ham.classList.toggle('open');drawer.classList.toggle('open');overlay.classList.toggle('on')});
+function closeMenu(){ham.classList.remove('open');drawer.classList.remove('open');overlay.classList.remove('on')}
+
+/* MENU TABS */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    document.getElementById('p-'+t.dataset.p).classList.add('on');
+  });
+});
+
+/* SCROLL REVEAL — lightweight IntersectionObserver, no JS animation overhead */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='none';io.unobserve(e.target)}});
+},{threshold:.12});
+document.querySelectorAll('.mcard,.rcard,.ccard,.stat-box,.r-stat,.gitem').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(16px)';
+  el.style.transition='opacity .45s ease,transform .45s ease';
+  io.observe(el);
+});
 </script>
 
 </body>
